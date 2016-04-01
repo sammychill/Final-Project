@@ -13,3 +13,7 @@
 * created class Neural_Network that takes arrays of hours slept and hours studied and returns an estimate of test scores
 * problems: estimate nearly random, far from actual values, does not learn
 * goals: train brain to improve, apply bell curve to musical values
+
+**March 30**
+* Talked to Tsmith, emailed Karly Brint
+* Working on understanding training and overfitting
