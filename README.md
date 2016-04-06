@@ -5,7 +5,7 @@
 * first change notes into numbers (1-8)
 * fractional values for sharps and flats
 * use classical composers to collect data
-* connect to Synesthesia 
+* connect to Synesthesia
 
 [youtube vid explaining neural networking] (https://www.youtube.com/watch?v=bxe2T-V8XRs)
 
@@ -15,5 +15,10 @@
 * goals: train brain to improve, apply bell curve to musical values
 
 **March 30**
-* Talked to Tsmith, emailed Karly Brint
-* Working on understanding training and overfitting
+* talked to Tsmith, emailed Karly Brint
+* working on understanding training and overfitting
+
+**April 6**
+* revised trajectory of plan to identifying note length and pitch
+* read up on "Recognizing Musical Notation Using Artificial Neural Networks"
+* started learning how to use PyBrain library (pulled their repository)
