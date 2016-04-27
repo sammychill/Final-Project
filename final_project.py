@@ -1,5 +1,3 @@
-import numpy as np
-import pybrain
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
@@ -14,7 +12,6 @@ ds = SupervisedDataSet(2, 1)
 
 X = np.array([[3, 5], [5, 1], [10, 2]])
 Y = np.array([[75], [82], [93]])
-
 
 for i in range(len(X)):
     ds.addSample(X[i], Y[i])
