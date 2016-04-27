@@ -22,3 +22,7 @@
 * revised trajectory of plan to identifying note length and pitch
 * read up on "Recognizing Musical Notation Using Artificial Neural Networks"
 * started learning how to use PyBrain library (pulled their repository)
+
+**April 27**
+* installed PyBrain and began writing questions based on its documentation
+* working on email to Professors for prject help
