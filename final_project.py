@@ -41,33 +41,47 @@
 # print yHat, y
 #learn how to use open CV, take his data
 
-from pybrain.tools.shortcuts import buildNetwork
+from pybrain.tools.shortcuts import LinearLayer, SigmoidLayer, FullConnection
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.optimization import CMAES
+from pybrain.structure import FeedForwardNetwork
 
+# def MakeDataSet():
+    #use sinx as data
 
-net = buildNetwork(2, 3, 1)
+def MakeNeuralNet():
+    net = FeedForwardNetwork()
+    inLayer = LinearLayer(3, name='Jon')
+    hiddenLayer = SigmoidLayer(2, name='Ryan')
+    outLayer = LinearLayer(1, name='Sam')
 
-result = net.activate([2, 1])
+    in_to_hidden = FullConnection(inLayer, hiddenLayer)
+    hidden_to_out = FullConnection(hiddenLayer, outLayer)
 
-ds = SupervisedDataSet(2, 1)
+    net.addInputModule(inLayer)
+    net.addModule(hiddenLayer)
+    net.addOutputModule(outLayer)
+    net.addConnection(in_to_hidden)
+    net.addConnection(hidden_to_out)
 
-X = ([3, 5], [5, 1], [10, 2])
-Y = ([75], [82], [93])
+    net.sortModules()
+    ds = SupervisedDataSet(2, 1)
+    trainer = BackpropTrainer(net, ds) #trains for one epoch
+    #trainer.trainUntilConvergence trains to a specific error
+    print net
 
-for i in range(len(X)):
-    ds.addSample(X[i], Y[i])
+# net.activate([1, 2])
 
-def objF(x):
-    return sum(x**2)
+#
+# for i in range(len(X)):
+#     ds.addSample(X[i], Y[i])
+#
+# def objF(x):
+#     return sum(x**2)
+#
+# x0 = ([2.1, -1])
+# l = CMAES(objF, x0)
+# l.maxEvaluations = 200000000000
 
-x0 = ([2.1, -1])
-l = CMAES(objF, x0)
-l.maxEvaluations = 200000000000
-
-trainer = BackpropTrainer(net, ds) #trains for one epoch
-#trainer.trainUntilConvergence trains to a specific error
-l.learn()
-
-print trainer.trainUntilConvergence()
+MakeNeuralNet()
