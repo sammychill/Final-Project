@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # import numpy as np
 #
 # X = np.array([3, 5], [5, 1], [10, 2])
@@ -42,6 +43,9 @@
 #learn how to use open CV, take his data
 
 from pybrain.tools.shortcuts import LinearLayer, SigmoidLayer, FullConnection
+=======
+from pybrain.tools.shortcuts import buildNetwork
+>>>>>>> master
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.optimization import CMAES
@@ -65,14 +69,20 @@ def MakeNeuralNet():
     net.addConnection(in_to_hidden)
     net.addConnection(hidden_to_out)
 
+<<<<<<< HEAD
     net.sortModules()
     ds = SupervisedDataSet(2, 1)
     trainer = BackpropTrainer(net, ds) #trains for one epoch
     #trainer.trainUntilConvergence trains to a specific error
     print net
+=======
+X = np.array([[3, 5], [5, 1], [10, 2]])
+Y = np.array([[75], [82], [93]])
+>>>>>>> master
 
 # net.activate([1, 2])
 
+<<<<<<< HEAD
 #
 # for i in range(len(X)):
 #     ds.addSample(X[i], Y[i])
@@ -83,5 +93,17 @@ def MakeNeuralNet():
 # x0 = ([2.1, -1])
 # l = CMAES(objF, x0)
 # l.maxEvaluations = 200000000000
+=======
+def objF(x):
+    return sum(x**2)
+
+x0 = ([2.1, -1])
+l = CMAES(objF, x0)
+l.maxEvaluations = 200
+
+trainer = BackpropTrainer(net, ds) #trains for one epoch
+#trainer.trainUntilConvergence trains to a specific error
+l.learn()
+>>>>>>> master
 
 MakeNeuralNet()
