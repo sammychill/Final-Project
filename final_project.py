@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 '''Trains a simple convnet on the MNIST dataset.
 Gets to 99.25 test accuracy after 12 epochs
 (there is still a lot of margin for parameter tuning).
@@ -8,6 +9,56 @@ from __future__ import print_function
 import numpy as np
 np.random.seed(1337)  # for reproducibility, same random each time
 #1337 is starting point
+=======
+# import numpy as np
+#
+# X = np.array([3, 5], [5, 1], [10, 2])
+# Y = np.array([75], [82], [93])
+# y = Y/10.
+#
+# class Neural_Network(object):
+#     def __init__(self):
+#         '''
+#         Hyperparameters
+#         constants that describe the structure/behavior of network
+#         never updated
+#         '''
+#         self.inputLayerSize = 2
+#         self.hiddenLayerSize = 3
+#         self.outputLayerSize = 1
+#         '''
+#         Weights
+#         randomly selected from standard deviation curve (from neg
+#         infinity to pos infinity)
+#         returns array sized according to arguments given
+#         '''
+#         self.W1 = np.random.randn(self.inputLayerSize, self.hiddenLayerSize)
+#         self.W2 = np.random.randn(self.hiddenLayerSize, self.outputLayerSize)
+#     def forward(self):
+#         '''
+#         passes data through network using sigmoid function
+#         returns yHat
+#         '''
+#         self.z2 = np.dot(X, self.W1) #multiplies matrices
+#         self.a2 = self.sigmoid(self.z2) #uses activation function
+#         self.z3 = np.dot(self.a2, self.W2) #multiplies matrices
+#         yHat = self.sigmoid(self.z3) #uses activation function
+#         return yHat
+#
+#     def sigmoid(self, z):
+#         return 1/(1+np.exp(-z))
+#
+# network = Neural_Network()
+# yHat = network.forward(X)
+# print yHat, y
+#learn how to use open CV, take his data
+
+from pybrain.tools.shortcuts import LinearLayer, SigmoidLayer, FullConnection
+from pybrain.datasets import SupervisedDataSet
+from pybrain.supervised.trainers import BackpropTrainer
+from pybrain.optimization import CMAES
+from pybrain.structure import FeedForwardNetwork
+>>>>>>> master
 
 from keras.datasets import mnist
 from keras.models import Sequential
@@ -34,8 +85,16 @@ nb_pool = 2
 # convolution kernel size
 nb_conv = 3
 
+<<<<<<< HEAD
 # the data, shuffled and split between train and test sets
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
+=======
+    net.sortModules()
+    ds = SupervisedDataSet(2, 1)
+    trainer = BackpropTrainer(net, ds) #trains for one epoch
+    #trainer.trainUntilConvergence trains to a specific error
+    print net
+>>>>>>> master
 
 X_train = X_train.reshape(X_train.shape[0], 1, img_rows, img_cols)
 #numpy, shape()
@@ -50,6 +109,7 @@ print('X_train shape:', X_train.shape)
 print(X_train.shape[0], 'train samples')
 print(X_test.shape[0], 'test samples')
 
+<<<<<<< HEAD
 # convert class vectors to binary class matrices
 Y_train = np_utils.to_categorical(y_train, nb_classes)
 Y_test = np_utils.to_categorical(y_test, nb_classes)
@@ -65,6 +125,18 @@ model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
 model.add(Dropout(0.25))
+=======
+#
+# for i in range(len(X)):
+#     ds.addSample(X[i], Y[i])
+#
+# def objF(x):
+#     return sum(x**2)
+#
+# x0 = ([2.1, -1])
+# l = CMAES(objF, x0)
+# l.maxEvaluations = 200000000000
+>>>>>>> master
 
 model.add(Flatten()) #multiplies dimensions by each other to get one number
 model.add(Dense(128)) #specifies that output matrix has 128 columns
