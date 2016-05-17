@@ -1,49 +1,98 @@
-from pybrain.tools.shortcuts import LinearLayer, SigmoidLayer, FullConnection
-from pybrain.tools.shortcuts import buildNetwork
-from pybrain.datasets import SupervisedDataSet
-from pybrain.supervised.trainers import BackpropTrainer
-from pybrain.optimization import CMAES
-from pybrain.structure import FeedForwardNetwork
+'''Trains a simple convnet on the MNIST dataset.
+Gets to 99.25 test accuracy after 12 epochs
+(there is still a lot of margin for parameter tuning).
+16 seconds per epoch on a GRID K520 GPU.
+'''
 
-# def MakeDataSet():
-    #use sinx as data
-class NeuralNetwork():
-    def __init__(self):
-        net = FeedForwardNetwork()
-        inLayer = LinearLayer(3, name='Jon')
-        hiddenLayer = SigmoidLayer(2, name='Ryan')
-        outLayer = LinearLayer(1, name='Sam')
+from __future__ import print_function
+import numpy as np
+np.random.seed(1337)  # for reproducibility, same random each time
+#1337 is starting point
 
-        in_to_hidden = FullConnection(inLayer, hiddenLayer)
-        hidden_to_out = FullConnection(hiddenLayer, outLayer)
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Activation, Flatten
+from keras.layers import Convolution2D, MaxPooling2D
+from keras.utils import np_utils
+from matplotlib import pyplot
+import matplotlib as mpl
 
-        net.addInputModule(inLayer)
-        net.addModule(hiddenLayer)
-        net.addOutputModule(outLayer)
-        net.addConnection(in_to_hidden)
-        net.addConnection(hidden_to_out)
+#this is where we groom our data and split it up
 
-        net.sortModules()
-        ds = SupervisedDataSet(2, 1)
-        trainer = BackpropTrainer(net, ds) #trains for one epoch
-        #trainer.trainUntilConvergence trains to a specific error
-        print net
+batch_size = 128 #too small (overfitting), too large (underfitting)
+#checked by validation dataset to find optimal batch_size for memory/speed/accuracy
+#determines number of iterations per epoch
+nb_classes = 10
+nb_epoch = 0
 
-    def objF(self, x):
-        return sum(x**2)
+# input image dimensions
+img_rows, img_cols = 28, 28
+# number of convolutional filters to use
+nb_filters = 32
+# size of pooling area for max pooling
+nb_pool = 2
+# convolution kernel size
+nb_conv = 3
 
-    def TrainNeuralNet(self):
-        x0 = ([2.1, -1])
-        l = CMAES(objF, x0)
-        l.maxEvaluations = 200
-        trainer = BackpropTrainer(net, ds)
+# the data, shuffled and split between train and test sets
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
 
+X_train = X_train.reshape(X_train.shape[0], 1, img_rows, img_cols)
+#numpy, shape()
+#numpy, reshape(a, new_shape, order), resizes matrix
+X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
+X_train = X_train.astype('float32') #numpy
+X_test = X_test.astype('float32')
+X_train /= 255 #divides X_train by 255 and sets X_train equal
+#X_train = X_train/255 = 235
+X_test /= 255
+print('X_train shape:', X_train.shape)
+print(X_train.shape[0], 'train samples')
+print(X_test.shape[0], 'test samples')
 
+# convert class vectors to binary class matrices
+Y_train = np_utils.to_categorical(y_train, nb_classes)
+Y_test = np_utils.to_categorical(y_test, nb_classes)
 
-# net.activate([1, 2])
+model = Sequential()
+#this is where we build our NN
 
-# for i in range(len(X)):
-#     ds.addSample(X[i], Y[i])
+model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
+                        border_mode='valid',
+                        input_shape=(1, img_rows, img_cols)))
+model.add(Activation('relu'))
+model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+model.add(Dropout(0.25))
 
-net = NeuralNetwork()
-print net.TrainNeuralNet()
+model.add(Flatten()) #multiplies dimensions by each other to get one number
+model.add(Dense(128)) #specifies that output matrix has 128 columns
+model.add(Activation('relu'))
+model.add(Dropout(0.5)) #stops overfitting by dropping half of inputs?
+model.add(Dense(nb_classes))
+model.add(Activation('softmax'))
+
+'''
+model.compile is method from Sequential class in keras database
+prints:
+Epoch 1/12
+60000/60000 [==============================]
+ETA: 162s - loss: 0.3675 - acc: 0.8887 - val_loss: 0.0935 - val_acc: 0.9728
+
+categorical_crossentropy -- gradient descent, cost function that alters
+weights and bias according to errors
+
+optimizer='sgd' -- shorthand for "from keras import SGD", template, import
+separately if we want to modify, stochastic gradient descent
+'''
+model.compile(loss='categorical_crossentropy',
+              optimizer='sgd', #addadelta
+              metrics=['accuracy'])
+
+#populate network with data, fit w/ training set, verify w/ validation set
+model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
+          verbose=1, validation_data=(X_test, Y_test))
+score = model.evaluate(X_test, Y_test, verbose=0)
+print('Test score:', score[0])
+print('Test accuracy:', score[1])
