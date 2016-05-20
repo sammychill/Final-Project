@@ -23,7 +23,7 @@ batch_size = 128 #too small (overfitting), too large (underfitting)
 #checked by validation dataset to find optimal batch_size for memory/speed/accuracy
 #determines number of iterations per epoch
 nb_classes = 10
-nb_epoch = 0
+nb_epoch = 12
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -87,7 +87,7 @@ optimizer='sgd' -- shorthand for "from keras import SGD", template, import
 separately if we want to modify, stochastic gradient descent
 '''
 model.compile(loss='categorical_crossentropy',
-              optimizer='sgd', #addadelta
+              optimizer='adadelta', #addadelta
               metrics=['accuracy'])
 
 #populate network with data, fit w/ training set, verify w/ validation set
